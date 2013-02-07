@@ -95,6 +95,8 @@ public class MainFrame extends JFrame implements ActionListener
         consolePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Console output"));
         consolePanel.getVerticalScrollBar().setUnitIncrement(25);
         consoleOutput.setEditable(false);
+        consoleOutput.setWrapStyleWord(true);
+        consoleOutput.setLineWrap(true);
 
         fileMenu.add(exitItem);
         toolsMenu.add(settingsItem);

@@ -127,7 +127,7 @@ public abstract class Pinger extends Thread{
                 {
                     if (userInterface != null )
                     {
-                        userInterface.updateConsole("Host Unreachable: verify user data - (username, password)");
+                        userInterface.updateConsole("Host Unreachable: verify user data - (username, password) - Tools > Setting > Proxy ");
                     }
                     // connection error while reaching the site, prevent additional calls by returning.
                     return;
@@ -141,7 +141,7 @@ public abstract class Pinger extends Thread{
                 {
                     if (userInterface != null )
                     {
-                        userInterface.updateConsole("Host Unreachable: are you behind a proxy? if so, set the proxy configuration in the config.properties resource file");
+                        userInterface.updateConsole("Host Unreachable: are you behind a proxy? if so, set the proxy configuration in the Tools > Setting > Proxy tab");
                     }
                     // connection error while reaching the site, prevent additional calls by returning.
                     return;
@@ -155,8 +155,9 @@ public abstract class Pinger extends Thread{
             {
                 if (userInterface != null )
                 {
-                    userInterface.updateConsole("Host Unreachable: are you behind a proxy? if so, set the proxy configuration in the config.properties resource file");
+                    userInterface.updateConsole("Host Unreachable: are you behind a proxy? if so, set the proxy configuration in the Tools > Setting > Proxy tab");
                 }
+                // connection error while reaching the site, prevent additional calls by returning.
                 return;
             }
             BufferedReader reader =
