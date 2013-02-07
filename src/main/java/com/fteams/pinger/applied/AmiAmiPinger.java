@@ -8,13 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Francis
- * Date: 13/02/06
- * Time: 2:01
- * To change this template use File | Settings | File Templates.
- */
 public class AmiAmiPinger extends Pinger{
     @Override
     public String getBaseURL() {

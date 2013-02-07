@@ -8,13 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Francis
- * Date: 13/02/06
- * Time: 1:47
- * To change this template use File | Settings | File Templates.
- */
 public class PropertyLoader {
 
     private long ping_timer;

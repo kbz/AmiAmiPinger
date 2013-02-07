@@ -10,13 +10,6 @@ import java.net.*;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Francis
- * Date: 13/02/06
- * Time: 2:00
- * To change this template use File | Settings | File Templates.
- */
 public abstract class Pinger extends Thread{
 
     protected MainFrame userInterface;
