@@ -1,4 +1,3 @@
-/* Copyright 2012 Sabre Holdings */
 package com.fteams.pinger.base;
 
 import com.fteams.pinger.PropertyLoader;

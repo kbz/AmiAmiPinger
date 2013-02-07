@@ -1,4 +1,3 @@
-/* Copyright 2012 Sabre Holdings */
 package com.fteams.pinger.structures;
 
 public class ProxyInformation
