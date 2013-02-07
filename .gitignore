@@ -32,6 +32,7 @@ local.properties
 .idea
 *.iml
 target/
+out/
 
 # Project Specific
 *.properties

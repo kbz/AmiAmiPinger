@@ -3,6 +3,8 @@ package com.fteams.pinger.ui;
 
 import com.fteams.pinger.PropertyLoader;
 
+import static com.fteams.pinger.app.Main.CONFIG_PATH;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,59 +14,41 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class ConfigurationFrame extends JFrame implements ActionListener
+class ConfigurationFrame extends JFrame implements ActionListener
 {
-    String CONFIG_PATH;
-    JButton updateButton;
-    JButton cancelButton;
-    JTabbedPane panelContainer;
-    JPanel buttonPanel;
-    JPanel basicSettingsPanel;
-    JPanel proxySettingsPanel;
-    JTextField timerField;
-    JTextField baseURLField;
-    JTextField searchStringField;
-    JTextField itemListField;
-    JCheckBox proxyEnabledCB;
-    JCheckBox userAuthEnabledCB;
-    JTextField proxyHostField;
-    JTextField proxyPortField;
-    JTextField proxyUserNameField;
-    JLabel proxyPasswordLabel;
-    JLabel timerLabel;
-    JLabel baseURLLabel;
-    JLabel searchStringLabel;
-    JLabel itemListLabel;
-    JLabel proxyEnabledLabel;
-    JLabel userAuthEnabledLabel;
-    JLabel proxyHostLabel;
-    JLabel proxyPortLabel;
-    JLabel proxyUserNameLabel;
-    JPasswordField proxy_password;
+    private JTextField timerField;
+    private JTextField baseURLField;
+    private JTextField searchStringField;
+    private JTextField itemListField;
+    private JCheckBox proxyEnabledCB;
+    private JCheckBox userAuthEnabledCB;
+    private JTextField proxyHostField;
+    private JTextField proxyPortField;
+    private JTextField proxyUserNameField;
+    private JPasswordField proxy_password;
 
-    private PropertyLoader loader;
+    private final PropertyLoader loader;
 
-    public ConfigurationFrame(String configFilePath) throws IOException
+    public ConfigurationFrame() throws IOException
     {
-        this.CONFIG_PATH = configFilePath;
         loader = new PropertyLoader();
-        loader.loadProperties(new File(configFilePath));
-        panelContainer = new JTabbedPane();
-        basicSettingsPanel = new JPanel();
-        timerLabel = new JLabel("Time between update calls:");
-        timerField = new JTextField(new Long(loader.getPingTimer()).toString());
+        loader.loadProperties(new File(CONFIG_PATH));
+        JTabbedPane panelContainer = new JTabbedPane();
+        JPanel basicSettingsPanel = new JPanel();
+        JLabel timerLabel = new JLabel("Time between update calls:");
+        timerField = new JTextField(Long.toString(loader.getPingTimer()));
         timerField.setColumns(10);
-        baseURLLabel = new JLabel("Base Look-up URL:");
+        JLabel baseURLLabel = new JLabel("Base Look-up URL:");
         baseURLField = new JTextField(loader.getBaseUrl());
         baseURLField.setColumns(10);
-        searchStringLabel = new JLabel("Matching string:");
+        JLabel searchStringLabel = new JLabel("Matching string:");
         searchStringField = new JTextField(loader.getSearchString());
         searchStringField.setColumns(10);
-        itemListLabel = new JLabel("Item Codes (CSV format):");
+        JLabel itemListLabel = new JLabel("Item Codes (CSV format):");
         itemListField = new JTextField(loader.getCodes());
         itemListField.setColumns(10);
 
-        basicSettingsPanel.setLayout(new GridLayout(4,2));
+        basicSettingsPanel.setLayout(new GridLayout(4, 2));
         basicSettingsPanel.add(timerLabel);
         basicSettingsPanel.add(timerField);
         basicSettingsPanel.add(baseURLLabel);
@@ -74,27 +58,27 @@ public class ConfigurationFrame extends JFrame implements ActionListener
         basicSettingsPanel.add(itemListLabel);
         basicSettingsPanel.add(itemListField);
 
-        proxySettingsPanel = new JPanel();
-        proxyEnabledLabel = new JLabel("Enable proxy:");
+        JPanel proxySettingsPanel = new JPanel();
+        JLabel proxyEnabledLabel = new JLabel("Enable proxy:");
         proxyEnabledCB = new JCheckBox();
         proxyEnabledCB.setSelected(loader.getProxyInformation() != null && loader.getProxyInformation().proxy_enabled);
 
-        proxyHostLabel = new JLabel("Proxy host:");
+        JLabel proxyHostLabel = new JLabel("Proxy host:");
         proxyHostField = new JTextField(loader.getProxyInformation().host);
-        proxyPortLabel = new JLabel("Proxy port:");
+        JLabel proxyPortLabel = new JLabel("Proxy port:");
         proxyPortField = new JTextField(loader.getProxyInformation().port);
 
-        userAuthEnabledLabel = new JLabel("Enable user authentication:");
+        JLabel userAuthEnabledLabel = new JLabel("Enable user authentication:");
         userAuthEnabledCB = new JCheckBox();
         userAuthEnabledCB.setSelected(loader.getProxyInformation() != null && loader.getProxyInformation().user_auth);
 
-        proxyUserNameLabel = new JLabel("Username:");
+        JLabel proxyUserNameLabel = new JLabel("Username:");
         proxyUserNameField = new JTextField(loader.getProxyInformation().p_username);
-        proxyPasswordLabel = new JLabel("Password:");
+        JLabel proxyPasswordLabel = new JLabel("Password:");
         proxy_password = new JPasswordField();
         proxy_password.setText(loader.getProxyInformation().p_password);
 
-        proxySettingsPanel.setLayout(new GridLayout(6,2));
+        proxySettingsPanel.setLayout(new GridLayout(6, 2));
         proxySettingsPanel.add(proxyEnabledLabel);
         proxySettingsPanel.add(proxyEnabledCB);
         proxySettingsPanel.add(proxyHostLabel);
@@ -108,9 +92,9 @@ public class ConfigurationFrame extends JFrame implements ActionListener
         proxySettingsPanel.add(proxyPasswordLabel);
         proxySettingsPanel.add(proxy_password);
 
-        buttonPanel = new JPanel();
-        updateButton = new JButton("Update");
-        cancelButton = new JButton("Cancel");
+        JPanel buttonPanel = new JPanel();
+        JButton updateButton = new JButton("Update");
+        JButton cancelButton = new JButton("Cancel");
 
         updateButton.addActionListener(this);
         cancelButton.addActionListener(this);
@@ -135,25 +119,21 @@ public class ConfigurationFrame extends JFrame implements ActionListener
         if (command.equals("update"))
         {
             Properties properties = new Properties();
-            properties.setProperty("ping.timer", timerField.getText() != null ? timerField.getText() : "60000"); // default : 1 minute
-            properties.setProperty("ping.url.base", baseURLField.getText() != null ? baseURLField.getText() : "");
-            properties.setProperty("ping.url.codes", itemListField.getText() != null ? itemListField.getText() : "");
-            properties.setProperty("ping.url.search_string", searchStringField.getText() != null ? searchStringField.getText() : "");
+            properties.setProperty("ping.timer",timerField.getText());
+            properties.setProperty("ping.url.base", baseURLField.getText());
+            properties.setProperty("ping.url.codes", itemListField.getText());
+            properties.setProperty("ping.url.search_string", searchStringField.getText());
             properties.setProperty("ping.use_proxy", proxyEnabledCB.isSelected() ? "true" : "false");
-            properties.setProperty("ping.proxy.host", proxyHostField.getText() != null ? proxyHostField.getText() : "");
-            properties.setProperty("ping.proxy.port", proxyPortField.getText() != null ? proxyPortField.getText() : "");
+            properties.setProperty("ping.proxy.host", proxyHostField.getText());
+            properties.setProperty("ping.proxy.port", proxyPortField.getText());
             properties.setProperty("ping.proxy.user_auth", userAuthEnabledCB.isSelected() ? "true" : "false");
-            properties.setProperty("ping.proxy.uname", proxyUserNameField.getText() != null ? proxyUserNameField.getText() : "" );
+            properties.setProperty("ping.proxy.username", proxyUserNameField.getText());
             String password = new String(proxy_password.getPassword());
-            properties.setProperty("ping.proxy.pword", password);
+            properties.setProperty("ping.proxy.password", password);
 
             try
             {
                 File file = new File(CONFIG_PATH);
-                if (!file.exists())
-                {
-                    file.createNewFile();
-                }
                 properties.store(new FileOutputStream(file),"");
             } catch (IOException e1)
             {
@@ -166,9 +146,8 @@ public class ConfigurationFrame extends JFrame implements ActionListener
             try
             {
                 reloadFields();
-            } catch (IOException e1)
-            {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
             setVisible(false);
         }
@@ -178,7 +157,7 @@ public class ConfigurationFrame extends JFrame implements ActionListener
     {
         loader.loadProperties(new File(CONFIG_PATH));
 
-        timerField.setText(new Long(loader.getPingTimer()).toString());
+        timerField.setText(Long.toString(loader.getPingTimer()));
         baseURLField.setText(loader.getBaseUrl());
         searchStringField.setText(loader.getSearchString());
         itemListField.setText(loader.getCodes());

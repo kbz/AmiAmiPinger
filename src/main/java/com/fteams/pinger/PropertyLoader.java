@@ -32,8 +32,8 @@ public class PropertyLoader {
         proxyInformation.port = properties.getProperty("ping.proxy.port");
         proxyInformation.proxy_enabled =  properties.getProperty("ping.use_proxy").equals("true");
         proxyInformation.user_auth = properties.getProperty("ping.proxy.user_auth") != null && properties.getProperty("ping.proxy.user_auth").equals("true");
-        proxyInformation.p_username = properties.getProperty("ping.proxy.uname");
-        proxyInformation.p_password = properties.getProperty("ping.proxy.pword");
+        proxyInformation.p_username = properties.getProperty("ping.proxy.username");
+        proxyInformation.p_password = properties.getProperty("ping.proxy.password");
      }
 
     public String getCodes()
@@ -46,7 +46,7 @@ public class PropertyLoader {
     }
     public Long getPingTimer()
     {
-        return new Long(this.ping_timer);
+        return this.ping_timer;
     }
     public List<String> getFigureCodeList()
     {
@@ -70,5 +70,16 @@ public class PropertyLoader {
         out +=("INFO: code list: " + urlList + "\n");
         out +=("INFO: using proxy info: " + proxyInformation);
         return out;
+    }
+
+    public boolean equals(Object o)
+    {
+        if (o instanceof PropertyLoader)
+        {
+            // yes string check.. lame, right?
+            if (o.toString().equals(this.toString()))
+                return true;
+        }
+        return false;
     }
 }

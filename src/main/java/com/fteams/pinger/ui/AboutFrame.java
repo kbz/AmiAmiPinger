@@ -6,16 +6,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AboutFrame extends JFrame implements ActionListener
+class AboutFrame extends JFrame implements ActionListener
 {
-    String about = "This program has been brought to you by kb_z\n" +
-                   "under the GNU GPL license, you are allowed to\n" +
-                   "use any parts of this code for non-commercial\n" +
-                   "purposes :P";
     public AboutFrame()
     {
-        setTitle("About Pinger...");
+        setTitle("About AmiAmiPing project...");
         setSize(450, 400);
+        String about = "This program has been brought to you by kb_z\n" +
+                "under the GNU GPL license, you are allowed to\n" +
+                "use any parts of this code for non-commercial\n" +
+                "purposes :P";
         JTextArea field = new JTextArea(about);
         field.setEditable(false);
         add(field, BorderLayout.CENTER);

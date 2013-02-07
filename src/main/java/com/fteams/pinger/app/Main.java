@@ -8,27 +8,21 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Main {
-    final static String CONFIG_PATH = "./config.properties";
+    public final static String CONFIG_PATH = "./config.properties";
     public static void main(String [] args)
     {
-        try
+        // any args may be used against you, please refrain from using args.
+        File configFile = new File(CONFIG_PATH);
+        if (!configFile.exists())
         {
-            File configFile = new File(CONFIG_PATH);
-            if (!configFile.exists())
-            {
-                configFile.createNewFile();
-                fillDefaultValues(configFile);
-            }
-
-            MainFrame ui = new MainFrame(CONFIG_PATH);
-        } catch (IOException e)
-        {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            createConfigurationWithDefaultValues();
         }
+
+        new MainFrame();
     }
 
 
-    private static void fillDefaultValues(File configFile)
+    private static void createConfigurationWithDefaultValues()
     {
         Properties properties = new Properties();
         properties.setProperty("ping.timer", "600000"); // default : 10 minute
@@ -39,14 +33,18 @@ public class Main {
         properties.setProperty("ping.proxy.host", "");
         properties.setProperty("ping.proxy.port", "");
         properties.setProperty("ping.proxy.user_auth", "false");
-        properties.setProperty("ping.proxy.uname", "" );
-        properties.setProperty("ping.proxy.pword", "");
+        properties.setProperty("ping.proxy.username", "" );
+        properties.setProperty("ping.proxy.password", "");
         try
         {
             File file = new File(CONFIG_PATH);
             if (!file.exists())
             {
-                file.createNewFile();
+                if (!file.createNewFile())
+                {
+                    throw new IOException("Failed to create the configuration file, " +
+                            "do you have enough read/access rights for this location?");
+                }
             }
             properties.store(new FileOutputStream(file),"");
         } catch (IOException e1)

@@ -2,9 +2,11 @@
 package com.fteams.pinger.ui;
 
 import com.fteams.pinger.PropertyLoader;
-import com.fteams.pinger.applied.AmiAmiPinger;
-import com.fteams.pinger.base.Pinger;
-import com.fteams.pinger.base.PingerPropertyUpdater;
+import com.fteams.pinger.applied.AmiAmiPing;
+import com.fteams.pinger.base.PingBase;
+import com.fteams.pinger.base.PingPropertyUpdater;
+
+import static com.fteams.pinger.app.Main.CONFIG_PATH;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,74 +16,55 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class MainFrame extends JFrame implements ActionListener
 {
-    private Pinger pinger;
-    private PingerPropertyUpdater updater;
-    String CONFIG_PATH;
+    private PingBase pingBase;
+    private PingPropertyUpdater updater;
 
-    DefaultListModel modelAvailable;
-    DefaultListModel modelUnavailable;
-    JScrollPane availableItemPanel;
-    JScrollPane unavailableItemPanel;
-    PropertyLoader loader;
-    JPanel panelContainer;
-    JPanel codesPanel;
-    JScrollPane consolePanel;
+    private final DefaultListModel modelAvailable;
+    private final DefaultListModel modelUnavailable;
+    private PropertyLoader loader;
 
-    JPanel buttonPanel;
-    JButton refreshButton;
-    JButton startButton;
-    JMenuBar menuBar;
-    JMenu fileMenu;
-    JMenu toolsMenu;
-    JMenu infoMenu;
-    JMenuItem exitItem;
-    JMenuItem settingsItem;
-    JMenuItem aboutItem;
-    JTextArea consoleOutput;
-    JList availableList;
-    JList unavailableList;
-    ConfigurationFrame config_frame;
-    AboutFrame about_frame;
+    private final JTextArea consoleOutput;
+    private ConfigurationFrame config_frame;
+    private AboutFrame about_frame;
 
-    public MainFrame(String config_path) throws IOException
-    {
-        this.CONFIG_PATH = config_path;
-        menuBar = new JMenuBar();
+    public MainFrame() {
+        JMenuBar menuBar = new JMenuBar();
 
-        panelContainer = new JPanel();
-        codesPanel = new JPanel();
-        buttonPanel = new JPanel();
+        JPanel panelContainer = new JPanel();
+        JPanel codesPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
 
         consoleOutput = new JTextArea();
 
-        fileMenu = new JMenu("File");
-        exitItem =  new JMenuItem("Exit");
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(this);
 
-        toolsMenu = new JMenu("Tools");
-        settingsItem = new JMenuItem("Settings");
+        JMenu toolsMenu = new JMenu("Tools");
+        JMenuItem settingsItem = new JMenuItem("Settings");
         settingsItem.addActionListener(this);
 
-        infoMenu = new JMenu("Help");
-        aboutItem =  new JMenuItem("About");
+        JMenu infoMenu = new JMenu("Help");
+        JMenuItem aboutItem = new JMenuItem("About");
         aboutItem.addActionListener(this);
 
-        refreshButton = new JButton("Refresh");
+        JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(this);
 
-        startButton = new JButton("Start");
+        JButton startButton = new JButton("Start");
         startButton.addActionListener(this);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         modelAvailable = new DefaultListModel();
         modelUnavailable = new DefaultListModel();
-        availableList = new JList(modelAvailable);
-        unavailableList = new JList(modelUnavailable);
+        JList availableList = new JList(modelAvailable);
+        JList unavailableList = new JList(modelUnavailable);
 
-        availableItemPanel = new JScrollPane(availableList);
-        unavailableItemPanel = new JScrollPane(unavailableList);
+        JScrollPane availableItemPanel = new JScrollPane(availableList);
+        JScrollPane unavailableItemPanel = new JScrollPane(unavailableList);
         availableItemPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Available Items"));
         unavailableItemPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unavailable Items"));
 
@@ -89,9 +72,9 @@ public class MainFrame extends JFrame implements ActionListener
         codesPanel.add(availableItemPanel);
 
         codesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Lookup IDs"));
-        codesPanel.setLayout(new GridLayout(1,2));
+        codesPanel.setLayout(new GridLayout(1, 2));
 
-        consolePanel = new JScrollPane(consoleOutput);
+        JScrollPane consolePanel = new JScrollPane(consoleOutput);
         consolePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Console output"));
         consolePanel.getVerticalScrollBar().setUnitIncrement(25);
         consoleOutput.setEditable(false);
@@ -106,11 +89,11 @@ public class MainFrame extends JFrame implements ActionListener
         menuBar.add(toolsMenu);
         menuBar.add(infoMenu);
 
-        setTitle("AmiAmi Pinger Interface");
+        setTitle("AmiAmi PingBase Interface");
 
         setJMenuBar(menuBar);
 
-        panelContainer.setLayout(new GridLayout(2,1));
+        panelContainer.setLayout(new GridLayout(2, 1));
         panelContainer.add(codesPanel);
 
 
@@ -134,10 +117,8 @@ public class MainFrame extends JFrame implements ActionListener
     }
     public void updateListContent()
     {
-//        modelAvailable.ensureCapacity(200);
-//        modelUnavailable.ensureCapacity(200);
-        List<String> avFigs = pinger.getAvailableItems();
-        List<String> unFigs = pinger.getUnavailableItems();
+        List<String> avFigs = pingBase.getAvailableItems();
+        List<String> unFigs = pingBase.getUnavailableItems();
         modelAvailable.removeAllElements();
         for (String item : avFigs)
         {
@@ -162,7 +143,7 @@ public class MainFrame extends JFrame implements ActionListener
             else
                 try
                 {
-                    config_frame = new ConfigurationFrame(CONFIG_PATH);
+                    config_frame = new ConfigurationFrame();
                 } catch (IOException e1)
                 {
                     e1.printStackTrace();
@@ -194,19 +175,20 @@ public class MainFrame extends JFrame implements ActionListener
                     loader.loadProperties(new File(CONFIG_PATH));
                 } catch (IOException e1)
                 {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e1.printStackTrace();
                 }
             }
-            if (pinger == null)
+            if (pingBase == null)
             {
-                pinger = new AmiAmiPinger();
-                pinger.loadProperties(loader);
-                pinger.setUserInterface(this);
-                pinger.start();
+                pingBase = new AmiAmiPing();
+                pingBase.setUserInterface(this);
+                pingBase.loadProperties(loader);
+                pingBase.refreshConfig(loader);
+                pingBase.start();
             }
             if (updater == null)
             {
-                updater = new PingerPropertyUpdater(CONFIG_PATH, loader, pinger);
+                updater = new PingPropertyUpdater(loader, pingBase, this);
                 updater.start();
             }
         }
@@ -214,7 +196,7 @@ public class MainFrame extends JFrame implements ActionListener
         {
             try
             {
-                if (pinger == null)
+                if (pingBase == null)
                 {
                     updateConsole("Press START before attempting to refresh.");
                     return;
@@ -222,9 +204,12 @@ public class MainFrame extends JFrame implements ActionListener
                 loader.loadProperties(new File(CONFIG_PATH));
             } catch (IOException e1)
             {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e1.printStackTrace();
             }
-            pinger.refreshConfig(loader);
+            if (pingBase.refreshConfig(loader))
+            {
+                updateConsole("Successfully updated the configuration.");
+            }
 
         }
     }

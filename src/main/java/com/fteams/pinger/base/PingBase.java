@@ -10,15 +10,14 @@ import java.net.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Pinger extends Thread{
+public abstract class PingBase extends Thread{
 
     protected MainFrame userInterface;
     protected PropertyLoader loader;
-    protected boolean refreshing = false;
-    protected List<String> availableItems = new LinkedList<String>();
+    protected final List<String> availableItems = new LinkedList<String>();
     
-    public abstract String getBaseURL();
-    public abstract String getSearchString();
+    protected abstract String getBaseURL();
+    protected abstract String getSearchString();
     public abstract void loadProperties(PropertyLoader loader);
     public abstract boolean refreshConfig(PropertyLoader loader);
     public List<String> getAvailableItems()
@@ -56,9 +55,9 @@ public abstract class Pinger extends Thread{
                 Thread.sleep(loader.getPingTimer());
 
             } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
     }
@@ -92,11 +91,11 @@ public abstract class Pinger extends Thread{
         }
     }
 
-    protected void pingAndParse() throws IOException {
+    void pingAndParse() throws IOException {
         for (String code : loader.getFigureCodeList())
         {
             URL url = new URL(getBaseURL() + code);
-            HttpURLConnection urlconn = null;
+            HttpURLConnection urlConnection;
 
             // load user authentication information > if specified in the config
             if (loader.getProxyInformation().user_auth)
@@ -115,7 +114,7 @@ public abstract class Pinger extends Thread{
             {
                 Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(loader.getProxyInformation().host, Integer.parseInt(loader.getProxyInformation().port)));
                 try {
-                    urlconn = (HttpURLConnection) url.openConnection(proxy);
+                    urlConnection = (HttpURLConnection) url.openConnection(proxy);
                 }catch (UnknownHostException e)
                 {
                     if (userInterface != null )
@@ -129,7 +128,7 @@ public abstract class Pinger extends Thread{
             else
             {
                 try{
-                    urlconn = (HttpURLConnection) url.openConnection();
+                    urlConnection = (HttpURLConnection) url.openConnection();
                 }catch (UnknownHostException e)
                 {
                     if (userInterface != null )
@@ -140,10 +139,10 @@ public abstract class Pinger extends Thread{
                     return;
                 }
             }
-            urlconn.setRequestMethod("GET");
-            urlconn.setInstanceFollowRedirects(false);
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setInstanceFollowRedirects(false);
             try {
-                urlconn.connect();
+                urlConnection.connect();
             }catch (UnknownHostException e)
             {
                 if (userInterface != null )
@@ -154,7 +153,7 @@ public abstract class Pinger extends Thread{
                 return;
             }
             BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+                    new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
             while (true){
                 String line = reader.readLine();
@@ -171,7 +170,7 @@ public abstract class Pinger extends Thread{
                 }
             }
             reader.close();
-            urlconn.disconnect();
+            urlConnection.disconnect();
         }
         loader.getFigureCodeList().removeAll(availableItems);
     }
