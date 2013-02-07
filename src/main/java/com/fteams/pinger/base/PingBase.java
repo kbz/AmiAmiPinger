@@ -51,6 +51,10 @@ public abstract class PingBase extends Thread{
                 if (size_before != loader.getFigureCodeList().size())
                 {
                     announceStatus();
+                    if (userInterface != null)
+                    {
+                        userInterface.updateListContent();
+                    }
                 }
                 Thread.sleep(loader.getPingTimer());
 

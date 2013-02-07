@@ -34,4 +34,26 @@ public class ProxyInformation
         }
         return out;
     }
+
+    public boolean equals(Object o)
+    {
+        if (o instanceof ProxyInformation)
+        {
+            ProxyInformation tmp = (ProxyInformation)o;
+            if (tmp.proxy_enabled != proxy_enabled)
+                return false;
+            if (tmp.user_auth != user_auth)
+                return false;
+            if (!tmp.host.equals(host))
+                return false;
+            if (!tmp.port.equals(port))
+                return false;
+            if (!tmp.p_password.equals(p_password))
+                return false;
+            if (!tmp.p_username.equals(p_username))
+                return false;
+            return true;
+        }
+        return false;
+    }
 }

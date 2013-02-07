@@ -76,9 +76,19 @@ public class PropertyLoader {
     {
         if (o instanceof PropertyLoader)
         {
-            // yes string check.. lame, right?
-            if (o.toString().equals(this.toString()))
-                return true;
+            PropertyLoader tmp = (PropertyLoader)o;
+            if (!tmp.getCodes().equals(getCodes()))
+                return false;
+            if (!tmp.getBaseUrl().equals(getBaseUrl()))
+                return false;
+            if (!tmp.getSearchString().equals(getSearchString()))
+                return false;
+            if (!tmp.getProxyInformation().equals(getProxyInformation()))
+                return false;
+            if (!tmp.getPingTimer().equals(getPingTimer()))
+                return false;
+
+            return true;
         }
         return false;
     }
