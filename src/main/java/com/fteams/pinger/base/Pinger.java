@@ -104,20 +104,23 @@ public abstract class Pinger extends Thread{
         {
             URL url = new URL(getBaseURL() + code);
             HttpURLConnection urlconn = null;
-            if (loader.getProxyInformation() != null && loader.getProxyInformation().proxy_enabled)
+
+            // load user authentication information > if specified in the config
+            if (loader.getProxyInformation().user_auth)
+            {
+                Authenticator authenticator = new Authenticator(){
+                    public PasswordAuthentication getPasswordAuthentication()
+                    {
+                        return new PasswordAuthentication(loader.getProxyInformation().p_username, loader.getProxyInformation().p_password.toCharArray());
+                    }
+
+                };
+                Authenticator.setDefault(authenticator);
+            }
+            // load proxy config if specified
+            if (loader.getProxyInformation().proxy_enabled)
             {
                 Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(loader.getProxyInformation().host, Integer.parseInt(loader.getProxyInformation().port)));
-                if (loader.getProxyInformation().user_auth)
-                {
-                    Authenticator authenticator = new Authenticator(){
-                        public PasswordAuthentication getPasswordAuthentication()
-                        {
-                            return new PasswordAuthentication(loader.getProxyInformation().p_username, loader.getProxyInformation().p_password.toCharArray());
-                        }
-
-                    };
-                    Authenticator.setDefault(authenticator);
-                }
                 try {
                     urlconn = (HttpURLConnection) url.openConnection(proxy);
                 }catch (UnknownHostException e)
@@ -126,6 +129,8 @@ public abstract class Pinger extends Thread{
                     {
                         userInterface.updateConsole("Host Unreachable: verify user data - (username, password)");
                     }
+                    // connection error while reaching the site, prevent additional calls by returning.
+                    return;
                 }
             }
             else
@@ -138,6 +143,8 @@ public abstract class Pinger extends Thread{
                     {
                         userInterface.updateConsole("Host Unreachable: are you behind a proxy? if so, set the proxy configuration in the config.properties resource file");
                     }
+                    // connection error while reaching the site, prevent additional calls by returning.
+                    return;
                 }
             }
             urlconn.setRequestMethod("GET");
@@ -150,6 +157,7 @@ public abstract class Pinger extends Thread{
                 {
                     userInterface.updateConsole("Host Unreachable: are you behind a proxy? if so, set the proxy configuration in the config.properties resource file");
                 }
+                return;
             }
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
