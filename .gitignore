@@ -34,6 +34,9 @@ local.properties
 target/
 out/
 
+# JAVA
+*.class
+
 # Project Specific
 *.properties
 
