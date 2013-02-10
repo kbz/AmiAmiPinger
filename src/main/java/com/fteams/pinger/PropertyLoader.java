@@ -77,18 +77,11 @@ public class PropertyLoader {
         if (o instanceof PropertyLoader)
         {
             PropertyLoader tmp = (PropertyLoader)o;
-            if (!tmp.getCodes().equals(getCodes()))
-                return false;
-            if (!tmp.getBaseUrl().equals(getBaseUrl()))
-                return false;
-            if (!tmp.getSearchString().equals(getSearchString()))
-                return false;
-            if (!tmp.getProxyInformation().equals(getProxyInformation()))
-                return false;
-            if (!tmp.getPingTimer().equals(getPingTimer()))
-                return false;
-
-            return true;
+            return tmp.getCodes().equals(getCodes())
+                    && tmp.getBaseUrl().equals(getBaseUrl())
+                    && tmp.getSearchString().equals(getSearchString())
+                    && tmp.getProxyInformation().equals(getProxyInformation())
+                    && tmp.getPingTimer().equals(getPingTimer());
         }
         return false;
     }

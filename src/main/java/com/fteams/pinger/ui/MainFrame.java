@@ -27,6 +27,7 @@ public class MainFrame extends JFrame implements ActionListener
 
     private final JTextArea consoleOutput;
     private ConfigurationFrame config_frame;
+    private QuickAddFrame quickAddFrame;
     private AboutFrame about_frame;
 
     public MainFrame() {
@@ -55,6 +56,9 @@ public class MainFrame extends JFrame implements ActionListener
 
         JButton startButton = new JButton("Start");
         startButton.addActionListener(this);
+
+        JButton quickStartButton = new JButton("Quick Add");
+        quickStartButton.addActionListener(this);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         modelAvailable = new DefaultListModel();
@@ -102,6 +106,7 @@ public class MainFrame extends JFrame implements ActionListener
 
         buttonPanel.add(startButton);
         buttonPanel.add(refreshButton);
+        buttonPanel.add(quickStartButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -210,6 +215,14 @@ public class MainFrame extends JFrame implements ActionListener
                 updateConsole("Successfully updated the configuration.");
             }
 
+        }
+        else if (e.getActionCommand().toLowerCase().equals("quick add"))
+        {
+            if (quickAddFrame == null)
+            {
+                quickAddFrame = new QuickAddFrame(this);
+            }
+            quickAddFrame.setVisible(true);
         }
     }
 }
