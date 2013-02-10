@@ -69,7 +69,6 @@ class QuickAddFrame extends JFrame implements ActionListener{
             if (addedItem.equals("")) {
                 return;
             }
-            parent.updateConsole(addedItem);
 
             PropertyLoader loader = new PropertyLoader();
             File config = new File(CONFIG_PATH);
@@ -83,7 +82,17 @@ class QuickAddFrame extends JFrame implements ActionListener{
                 return;
             }
 
-            Properties properties = prepareProperties(loader.getCodes()+","+addedItem, loader);
+            String preparedString = loader.getCodes();
+            if (preparedString.length()==0)
+            {
+                preparedString = addedItem;
+            }
+            else
+            {
+                preparedString += ","+addedItem;
+            }
+
+            Properties properties = prepareProperties(preparedString, loader);
 
             codeField.setText("");
             try {
@@ -106,7 +115,6 @@ class QuickAddFrame extends JFrame implements ActionListener{
             {
                 return;
             }
-            parent.updateConsole(removedItem);
             PropertyLoader loader = new PropertyLoader();
             File config = new File(CONFIG_PATH);
             try {
@@ -117,9 +125,6 @@ class QuickAddFrame extends JFrame implements ActionListener{
                 return;
             }
             String preparedString = prepareString(removedItem, loader);
-
-            parent.updateConsole(preparedString);
-
             Properties properties = prepareProperties(preparedString, loader);
             codeField.setText("");
             try {
