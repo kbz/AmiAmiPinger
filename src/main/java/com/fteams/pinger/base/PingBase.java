@@ -155,6 +155,15 @@ public abstract class PingBase extends Thread{
                 }
                 // connection error while reaching the site, prevent additional calls by returning.
                 return;
+            } catch (SocketException e)
+            {
+                if (userInterface != null )
+                {
+                    userInterface.updateConsole("Host Unreachable: unable to connect, verify your network connection as well as the search URL, Tools > Setting > Basic tab");
+                }
+                // connection error while reaching the site, prevent additional calls by returning.
+                return;
+
             }
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
